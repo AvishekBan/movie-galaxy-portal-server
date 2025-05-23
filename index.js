@@ -52,6 +52,15 @@ async function run() {
          res.send(result);
       });
 
+      app.get("/favorites", async (res, req) => {
+         const email = req.query.email;
+         const favorites = await db
+            .movieCollection("favorites")
+            .find({ userEmail: email })
+            .toArray();
+         res.send(favorites);
+      });
+
       // Send a ping to confirm a successful connection
       await client.db("admin").command({ ping: 1 });
       console.log("Pinged your deployment. You successfully connected to MongoDB!");
