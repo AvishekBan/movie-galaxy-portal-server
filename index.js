@@ -30,6 +30,8 @@ async function run() {
       app.get("/movie", async (req, res) => {
          const cursor = movieCollection.find();
          const result = await cursor.toArray();
+         console.log(result);
+
          res.send(result);
       });
 
@@ -72,6 +74,18 @@ async function run() {
          }
       });
       app.get("/movies/:id", async (req, res) => {
+         try {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) };
+            const result = await movieCollection.findOne(query);
+            res.send(result);
+            console.log(result);
+         } catch (error) {
+            console.log(error);
+         }
+      });
+
+      app.get("/update/:id", async (req, res) => {
          try {
             const id = req.params.id;
             const query = { _id: new ObjectId(id) };
