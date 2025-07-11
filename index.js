@@ -97,6 +97,35 @@ async function run() {
          }
       });
 
+      app.put("/update/:id", async (req, res) => {
+         try {
+            const id = req.params.id;
+            const updatedMovie = req.body;
+            console.log(updatedMovie);
+
+            const filter = { _id: new ObjectId(id) };
+            const options = { upsert: true };
+            const updateDoc = {
+               $set: {
+                  form: {
+                     poster: updatedMovie.poster,
+                     title: updatedMovie.title,
+                     genre: updatedMovie.genre,
+                     duration: updatedMovie.duration,
+                     releaseYear: updatedMovie.releaseYear,
+                     rating: updatedMovie.rating,
+                     summary: updatedMovie.summary,
+                  },
+               },
+            };
+            const result = await movieCollection.updateOne(filter, updateDoc, options);
+            res.send(result);
+         } catch (error) {
+            console.error(error);
+            res.status(500).send({ message: "Update failed" });
+         }
+      });
+
       // Send a ping to confirm a successful connection
       await client.db("admin").command({ ping: 1 });
       console.log("Pinged your deployment. You successfully connected to MongoDB!");
